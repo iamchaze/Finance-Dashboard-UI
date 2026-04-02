@@ -87,24 +87,30 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
-      <header className="app-header">
-        <div className="app-brand">
-          <h1>Finance Dashboard</h1>
-          <div className="header-user">
-            <img alt={user.name} className="header-user-avatar" src={user.profilePhoto} />
-            <div className="header-user-meta">
-              <p>{user.name}</p>
-              <span>{selectedRole}</span>
+    <div className="mx-auto min-h-screen w-full max-w-[1200px] px-4 pb-8 pt-7 md:px-4">
+      <header className="mb-5 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="m-0 text-[clamp(1.35rem,2.5vw,2rem)] font-bold tracking-[-0.02em] text-[var(--text-main)]">
+            Finance Dashboard
+          </h1>
+          <div className="mt-2 flex items-center gap-2">
+            <img
+              alt={user.name}
+              className="h-[34px] w-[34px] rounded-full object-cover"
+              src={user.profilePhoto}
+            />
+            <div>
+              <p className="m-0 text-[0.82rem] font-bold text-[var(--text-main)]">{user.name}</p>
+              <span className="block text-[0.74rem] text-[var(--text-muted)]">{selectedRole}</span>
             </div>
           </div>
         </div>
-        <div className="header-actions">
-          <label className="visually-hidden" htmlFor="selected-role">
+        <div className="flex items-center gap-2 self-end sm:self-auto">
+          <label className="sr-only" htmlFor="selected-role">
             Select role
           </label>
           <select
-            className="role-select"
+            className="h-[38px] cursor-pointer appearance-none rounded-[10px] border border-[var(--border)] bg-[var(--surface)] px-[0.55rem] text-[0.8rem] font-semibold text-[var(--text-main)]"
             id="selected-role"
             onChange={(event) => setSelectedRole(event.target.value)}
             value={selectedRole}
@@ -117,7 +123,7 @@ function App() {
           </select>
           <button
             aria-label={showFinancialValues ? 'Hide balance, income and expenses' : 'Show balance, income and expenses'}
-            className="theme-toggle"
+            className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text-main)] transition hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand)]"
             onClick={() => setShowFinancialValues((current) => !current)}
             type="button"
           >
@@ -125,7 +131,7 @@ function App() {
           </button>
           <button
             aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-            className="theme-toggle"
+            className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text-main)] transition hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand)]"
             onClick={toggleTheme}
             type="button"
           >
@@ -134,7 +140,7 @@ function App() {
         </div>
       </header>
 
-      <main className="app-content">
+      <main className="pb-4">
         {route === 'transactions' ? (
           <Transactions />
         ) : (

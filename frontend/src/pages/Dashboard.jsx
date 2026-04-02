@@ -46,6 +46,14 @@ const buildPieGradient = (segments) => {
   return `conic-gradient(${slices.join(', ')})`
 }
 
+const IncomePeriodIcon = () => (
+  <svg aria-hidden="true" className="income-switch-icon" viewBox="0 0 24 24">
+    <path d="M8 3v3M16 3v3M4 9h16" />
+    <rect height="14" rx="2.5" width="18" x="3" y="6" />
+    <path d="m9 14 2 2 4-4" />
+  </svg>
+)
+
 const Dashboard = ({ showFinancialValues }) => {
   const {
     filters,
@@ -132,54 +140,60 @@ const Dashboard = ({ showFinancialValues }) => {
   const selectedIncome =
     filters.incomePeriod === 'yearly' ? income.yearlyProjectedTotal : income.monthlyTotal
   const incomePeriodLabel = filters.incomePeriod === 'yearly' ? 'Last year\'s income' : 'Monthly recurring income'
+  const summaryCardClass =
+    'min-h-[146px] min-w-[245px] flex-1 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow)]'
+  const panelClass = 'rounded-[18px] border border-[var(--border)] bg-[var(--surface)] p-4 pb-5 shadow-[var(--shadow)]'
 
   return (
-    <section className="dashboard">
-      <div className="summary-grid">
-        <article className="summary-card">
-          <p className="summary-label">Total Balance</p>
-          <p className="summary-value">
+    <section className="grid gap-4">
+      <div className="flex gap-3 overflow-x-auto pb-[0.15rem] [scrollbar-width:thin]">
+        <article className={summaryCardClass}>
+          <p className="m-0 text-[0.83rem] text-[var(--text-muted)]">Total Balance</p>
+          <p className="m-[0.45rem_0_0.25rem] text-[clamp(1.35rem,2.9vw,2rem)] font-bold tracking-[-0.02em]">
             {showFinancialValues ? formatCurrency(totalBalance, income.currency) : '******'}
           </p>
-          <span className="summary-footnote">From investments and recent cash flow</span>
+          <span className="text-[0.78rem] text-[var(--text-muted)]">From investments and recent cash flow</span>
         </article>
 
-        <article className="summary-card">
-          <div className="summary-head">
-            <p className="summary-label">Income</p>
-            <label className="visually-hidden" htmlFor="income-period">
-              Select income period
-            </label>
-            <select
-              className="income-filter-select"
-              id="income-period"
-              onChange={(event) => updateFilter('incomePeriod', event.target.value)}
-              value={filters.incomePeriod}
-            >
-              <option value="monthly">Per Month</option>
-              <option value="yearly">Per Year</option>
-            </select>
+        <article className={summaryCardClass}>
+          <div className="flex items-center justify-between">
+            <p className="m-0 text-[0.83rem] text-[var(--text-muted)]">Income</p>
+            {showFinancialValues ? (
+              <button
+                aria-label="Toggle income period"
+                className="inline-flex items-center gap-[0.35rem] rounded-lg border border-[var(--border)] bg-[var(--surface)] px-[0.45rem] py-[0.32rem] text-[0.76rem] font-semibold text-[var(--text-main)]"
+                onClick={() =>
+                  updateFilter('incomePeriod', filters.incomePeriod === 'monthly' ? 'yearly' : 'monthly')
+                }
+                type="button"
+              >
+                <IncomePeriodIcon />
+                {filters.incomePeriod === 'monthly' ? 'Per Month' : 'Per Year'}
+              </button>
+            ) : null}
           </div>
-          <p className="summary-value">
+          <p className="m-[0.45rem_0_0.25rem] text-[clamp(1.35rem,2.9vw,2rem)] font-bold tracking-[-0.02em]">
             {showFinancialValues ? formatCurrency(selectedIncome, income.currency) : '******'}
           </p>
-          <span className="summary-footnote">{incomePeriodLabel}</span>
+          <span className="text-[0.78rem] text-[var(--text-muted)]">{incomePeriodLabel}</span>
         </article>
 
-        <article className="summary-card">
-          <p className="summary-label">Expenses</p>
-          <p className="summary-value">
+        <article className={summaryCardClass}>
+          <p className="m-0 text-[0.83rem] text-[var(--text-muted)]">Expenses</p>
+          <p className="m-[0.45rem_0_0.25rem] text-[clamp(1.35rem,2.9vw,2rem)] font-bold tracking-[-0.02em]">
             {showFinancialValues ? formatCurrency(totalExpenses, income.currency) : '******'}
           </p>
-          <span className="summary-footnote">Spending by category</span>
+          <span className="text-[0.78rem] text-[var(--text-muted)]">Spending by category</span>
         </article>
       </div>
 
-      <div className="visual-grid">
-        <article className="dashboard-panel">
-          <div className="panel-head">
-            <h2>Balance Trend</h2>
-            <p>Based on the last 3 months of transactions</p>
+      <div className="grid gap-4 lg:grid-cols-[1.25fr_1fr]">
+        <article className={panelClass}>
+          <div className="mb-3.5">
+            <h2 className="m-0 text-[1.02rem] font-bold">Balance Trend</h2>
+            <p className="m-[0.25rem_0_0] text-[0.84rem] text-[var(--text-muted)]">
+              Based on the last 3 months of transactions
+            </p>
           </div>
           <div className="trend-chart-wrap">
             <svg aria-label="Balance trend chart" className="trend-chart" role="img" viewBox="0 0 680 260">
@@ -190,17 +204,20 @@ const Dashboard = ({ showFinancialValues }) => {
               ))}
             </svg>
           </div>
-          <div className="trend-labels" style={{ gridTemplateColumns: `repeat(${Math.max(monthlySnapshot.length, 1)}, minmax(0, 1fr))` }}>
+          <div
+            className="mt-2 grid gap-1 text-xs text-[var(--text-muted)]"
+            style={{ gridTemplateColumns: `repeat(${Math.max(monthlySnapshot.length, 1)}, minmax(0, 1fr))` }}
+          >
             {monthlySnapshot.map((item) => (
               <span key={item.month}>{item.month}</span>
             ))}
           </div>
         </article>
 
-        <article className="dashboard-panel">
-          <div className="panel-head">
-            <h2>Spending Breakdown</h2>
-            <p>Categorical view of expenses</p>
+        <article className={panelClass}>
+          <div className="mb-3.5">
+            <h2 className="m-0 text-[1.02rem] font-bold">Spending Breakdown</h2>
+            <p className="m-[0.25rem_0_0] text-[0.84rem] text-[var(--text-muted)]">Categorical view of expenses</p>
           </div>
 
           <div className="breakdown-layout">
@@ -242,32 +259,42 @@ const Dashboard = ({ showFinancialValues }) => {
         </article>
       </div>
 
-      <article className="dashboard-panel transactions-panel">
-        <div className="panel-head panel-head-row">
+      <article className={panelClass}>
+        <div className="mb-3.5 flex items-start justify-between gap-3">
           <div>
-            <h2>Recent Transactions</h2>
-            <p>Latest account activity</p>
+            <h2 className="m-0 text-[1.02rem] font-bold">Recent Transactions</h2>
+            <p className="m-[0.25rem_0_0] text-[0.84rem] text-[var(--text-muted)]">Latest account activity</p>
           </div>
-          <a className="view-all-link" href="#/transactions">
+          <a
+            className="rounded-[10px] border border-[var(--border)] px-[0.65rem] py-[0.4rem] text-[0.8rem] font-bold text-[var(--text-main)] no-underline transition hover:bg-[var(--surface-soft)]"
+            href="#/transactions"
+          >
             View All
           </a>
         </div>
-        <div className="transactions-list">
+        <div className="grid gap-[0.7rem]">
           {recentTransactions.length === 0 ? (
-            <p className="empty-state-message">No transactions match the selected filters.</p>
+            <p className="m-[0.5rem_0_0] text-[var(--text-muted)]">No transactions match the selected filters.</p>
           ) : (
             recentTransactions.map((transaction) => {
               const isCredit = transaction.transactionType.toLowerCase() === 'credit'
               const signedAmount = isCredit ? transaction.amount : -transaction.amount
               return (
-                <div className="transaction-row" key={transaction.transactionId}>
+                <div
+                  className="flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] px-3 py-[0.65rem]"
+                  key={transaction.transactionId}
+                >
                   <div>
-                    <p className="transaction-name">{transaction.senderReceiverName}</p>
-                    <span className="transaction-date">
+                    <p className="m-0 text-[0.92rem]">{transaction.senderReceiverName}</p>
+                    <span className="block text-[0.76rem] text-[var(--text-muted)]">
                       {formatTransactionDate(transaction.date)} | {transaction.transactionId}
                     </span>
                   </div>
-                  <p className={`transaction-amount ${isCredit ? 'credit' : 'debit'}`}>
+                  <p
+                    className={`m-0 text-[0.92rem] font-bold ${
+                      isCredit ? 'text-[var(--success)]' : 'text-[var(--danger)]'
+                    }`}
+                  >
                     {formatCurrency(signedAmount, income.currency, 2)}
                   </p>
                 </div>
