@@ -1,0 +1,57 @@
+:root {
+  color-scheme: light;
+  font-family: "Manrope", "Segoe UI", "Helvetica Neue", sans-serif;
+  --bg: #f2f5fb;
+  --bg-accent: radial-gradient(circle at 15% -15%, #d9e5ff 5%, transparent 55%),
+    radial-gradient(circle at 90% 0%, #cdeef0 10%, transparent 45%);
+  --surface: #ffffff;
+  --surface-soft: #f7f9fd;
+  --border: #dbe4f4;
+  --text-main: #1f2a44;
+  --text-muted: #60708f;
+  --brand: #4f6bed;
+  --brand-soft: #e3e9ff;
+  --success: #169b5d;
+  --danger: #d84545;
+  --shadow: 0 20px 50px rgba(39, 60, 120, 0.12);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0d1422;
+  --bg-accent: radial-gradient(circle at 15% -15%, #253659 5%, transparent 55%),
+    radial-gradient(circle at 90% 0%, #112a36 10%, transparent 45%);
+  --surface: #131e33;
+  --surface-soft: #1a2842;
+  --border: #25395b;
+  --text-main: #f0f4ff;
+  --text-muted: #93a4c5;
+  --brand: #7f97ff;
+  --brand-soft: rgba(79, 107, 237, 0.25);
+  --success: #4ad795;
+  --danger: #ff7f7f;
+  --shadow: 0 20px 50px rgba(1, 7, 17, 0.45);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-accent), var(--bg);
+  color: var(--text-main);
+  transition: background-color 240ms ease, color 240ms ease;
+}
+
+button {
+  font: inherit;
+}
